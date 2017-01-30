@@ -38,7 +38,7 @@ def initialize_db(con, cursor):
 		     	     "`user_id` varchar (15) NOT NULL, `password` varchar(16) NOT NULL, `email` varchar(50) NOT NULL, PRIMARY KEY(user_id))")
 
 	create_table(cursor, "`Inventory`", "(`prod_id` varchar(10) NOT NULL, `prod_name` varchar(20) NOT NULL,`description`"
-		     	     "varchar(50), `price` decimal(9,2) NOT NULL, `in_cart` int NOT NULL DEFAULT 0, PRIMARY KEY(prod_id))")
+		     	     "varchar(50), `price` decimal(9,2) NOT NULL, PRIMARY KEY(prod_id))")
 
 
 	insert_items(con, cursor, "UserAccounts", "(first_name, last_name, user_id, password, email)", "(%s,%s,%s,%s,%s)", ('Darren', 'Cunningham'
