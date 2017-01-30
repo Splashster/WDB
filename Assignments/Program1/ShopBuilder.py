@@ -44,9 +44,11 @@ except mysql.connector.Error as err:
 create_table(cursor, "`UserAccounts`", "(`first_name` varchar(14) NOT NULL, `last_name` varchar(16) NOT NULL,"
 		     "`user_id` varchar (15) NOT NULL, `password` varchar(16) NOT NULL, `email` varchar(50) NOT NULL)")
 
+create_table(cursor, "`Inventory`", "(`prod_id` varchar(10) NOT NULL, `prod_name` varchar(20) NOT NULL,`description`"
+		     "varchar(50), `price` decimal(9,2) NOT NULL, `in_cart` int NOT NULL DEFAULT 0)")
 		
 
-print cursor.execute("select * from UserAccounts")
+cursor.execute("SHOW TABLES")
 
 result = cursor.fetchall()
 
