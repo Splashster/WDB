@@ -16,8 +16,8 @@ form_items = cgi.FieldStorage()
 useriden = form_items.getvalue('userident')
 user_pass = form_items.getvalue('user_passwd')
 
-useriden = '123'
-user_pass = '123'
+#useriden = '123'
+#user_pass = '123'
 
 command = "SELECT * FROM `UserAccounts` where id=%s and password=%s"
 cursor.execute(command, (useriden, user_pass))
@@ -31,7 +31,7 @@ if cursor.rowcount == 1:
 		var d = new Date();
 		d.setTime(d.getTime() + (expiretime*24*60*60*1000));
 		var expires = "expires=" + d.toGMTString();
-		document.cookie = cname + "-" + cvalue + ";" + expires + ";path=/";
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 		}
 		function getCookie(cname) {
 		var name = cname + "=";
@@ -53,14 +53,14 @@ if cursor.rowcount == 1:
 		}else{
 			alert('Dont know who you are!');
 		}}
-		createCookie("username",'harry',1);
+		createCookie("username",'%s',1);
 		checkCookie();	
 		window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
 		</script>
 		</head>
 		<body>
 		</body>
-		</html>"""#%(useriden)
+		</html>"""%(useriden)
 else:
 	print """Content-type:text/html\r\n\r\n
 		<html>
