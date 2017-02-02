@@ -18,7 +18,7 @@ if l_name is None:
 	l_name = ""
 if email_add is None:
 	email_add = ""
-if user_pass is not  None:
+if user_pass is not None:
 	print """Content-type:text/html\r\n\r\n
 	  	<html>
 		<body>"""
@@ -32,9 +32,9 @@ if user_pass is not  None:
 		print """
 		<script type='text/javascript'>
 		alert('User ID already exists')
-		window.location.href='http://localhost/~coursework/cgi-bin/registration.py'
+		window.location.href='http://localhost/~coursework/cgi-bin/registration.py?first_name=%s&last_name=%s&user_id=%s&email=%s'
 		</script>
-		"""
+		"""%(f_name,l_name,userid,email_add)
 	print """
 		</body>
 		</html>"""
