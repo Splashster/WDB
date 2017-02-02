@@ -38,7 +38,7 @@ def initialize_db(con, cursor):
 		     	     "`password` varchar(16) NOT NULL, `email` varchar(50) NOT NULL, PRIMARY KEY(id))")
 
 	create_table(cursor, "`Inventory`", "(`id` varchar(10) NOT NULL, `prod_name` varchar(20) NOT NULL,`description`"
-		     	     "varchar(50), `price` decimal(9,2) NOT NULL, PRIMARY KEY(id))")
+		     	     "varchar(50), `price` varchar(9)  NOT NULL, PRIMARY KEY(id))")
 
 	create_table(cursor, "`Purchases`", "(`purchase_id` varchar(15) NOT NULL, `user_id` varchar(15) NOT NULL, `prod_id` varchar(10) NOT NULL,"
 					   "`quantity` int NOT NULL, PRIMARY KEY(purchase_id), INDEX(user_id), INDEX(prod_id),"
@@ -49,30 +49,30 @@ def initialize_db(con, cursor):
 			  	, 'pass', 'ois@gmail.com'))
 		
 	insert_items(con, cursor, "Inventory","(id, prod_name, description, price)","(%s,%s,%s,%s)",('1239239CR', 'ServerT', 'Server Tower'
-		     		, '10.95'))
+		     		, '$10.95'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('12459JR','Router','A Mega Awesome Router'
-		     		 , 2000.00))
+		     		 , '$2000.00'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('87890CR','Firewall',
-			  	  'The most epic Firewall you will ever buy', 10000.00))
+			  	  'The most epic Firewall you will ever buy', '$10000.00'))
 
-	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('KO2304','IDS/IPS',"Intrusion Detection System/Intrusion Prevention System", 980.00))
+	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('KO2304','IDS/IPS',"Intrusion Detection System/Intrusion Prevention System", '$980.00'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('99233KOP','VPN','Virtual Private Network'
-		    		 , 5.99))
+		    		 , '$5.99'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('KIJ232103','Ethernet Cord',
-				 'Cat 5 Ethernet Cord', 2.99))
+				 'Cat 5 Ethernet Cord', '$2.99'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('OKR12321','AC Plug','Server power cord'
-		     		 , 0.99))
+		     		 , '$0.99'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('CH1203','Snickers Bar',
-			  	  'Gotta keep those muscles growing...', 99.99))
+			  	  'Gotta keep those muscles growing...', '$99.99'))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('C12345R','Burgers',
-			  	  'Need something random here....', 5.45))
+			  	  'Need something random here....', '$5.45'))
 
 '''
 Try to connect to the database.
