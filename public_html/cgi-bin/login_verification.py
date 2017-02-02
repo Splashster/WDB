@@ -26,7 +26,7 @@ if cursor.rowcount == 1:
 	print """Content-type:text/html\r\n\r\n
 	  	<html>
 		<head>
-		<script type='text/javascript'>
+		<script type="text/javascript">
 		function createCookie(cname,cvalue,expiretime){
 		var d = new Date();
 		d.setTime(d.getTime() + (expiretime*24*60*60*1000));
@@ -46,19 +46,20 @@ if cursor.rowcount == 1:
 			return c.substring(name.length, c.length);
 		} } return " "; }
 		function checkCookie() {
-		var user=getCookie("username");
-		createCookie("username",user,-1);
+		var user=getCookie("username")
 		if(user != ""){
 			alert('Welcome ' + user + '!');
 		}else{
 			alert('Dont know who you are!');
 		}}
-		createCookie("username",'%s',1);
-		checkCookie();	
-		window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
 		</script>
 		</head>
 		<body>
+		<script type="text/javascript">
+		createCookie("username",'%s',30);
+		checkCookie();	
+		window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+		</script>		
 		</body>
 		</html>"""%(useriden)
 else:

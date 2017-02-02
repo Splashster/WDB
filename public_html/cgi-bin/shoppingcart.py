@@ -23,29 +23,67 @@ command = "SELECT * FROM `Inventory`"
 cursor.execute(command)
 results = cursor.fetchall()
 index = 0
+rowcount = 0
 quantity = 0
 
 print """Content-type:text/html\r\n\r\n
-	<html>
-	<head>
-	<h1 align="center">Catalog<h1>
-	<style>
-	table, th, td{
-		border: 1px solid black;
-	}
-	</style>
-	</head>
-	<body>
-	<table id='shop_tb' style="width:100%">
-	<tr>
-	<th>Product Id</th>
-	<th>Product Name</th>
-	<th>Description</th>
-	<th>Price ea.</th>
-	<th>In Cart</th>
-	<th>Quan. to Add</th>
-	</tr>
-	"""
+<html>
+<head>
+<h1 align="center">Catalog<h1>
+<style>
+table, th, td{
+	border: 1px solid black;
+}
+</style>
+<script type="text/javascript">
+function createCookie(cname,cvalue,expiretime){
+var d = new Date();
+d.setTime(d.getTime() + (expiretime*24*60*60*1000));
+var expires = "expires=" + d.toGMTString();
+document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+var name = cname + "=";
+var decodedCookie = decodeURIComponent(document.cookie);
+var ca = decodedCookie.split(';');
+for(var i = 0; i < ca.length; i++){
+var c = ca[i];
+while (c.charAt(0) == ' '){
+	c = c.substring(1);
+}
+if(c.indexOf(name) == 0){
+	return c.substring(name.length, c.length);
+} } return " "; }
+
+function checkCookie() {
+var user=getCookie("username")
+if(user != " "){
+	alert('Welcome ' + user + '!');
+}else{
+	alert('Dont know who you are!');
+}}
+function addItems(){
+var purchases = {}"""
+for r in results:
+	print """ purchases["%s"]=20;
+	"""%(r[0])
+print """
+createCookie("cart_items",purchases,1);
+checkCookie();	
+}
+</script>
+</head>
+<body>
+<table id='shop_tb' style="width:100%">
+<tr>
+<th>Product Id</th>
+<th>Product Name</th>
+<th>Description</th>
+<th>Price ea.</th>
+<th>In Cart</th>
+<th>Quan. to Add</th>
+</tr>
+"""
 for res_row in results:
 	print """
 		<script type='text/javascript'>
@@ -65,7 +103,9 @@ for res_row in results:
 		quant=document.createElement("input");
 		quant.id="quantity"+'%s';
 		cell6.appendChild(quant);
-		document.getElementById(quant.id).defaultValue='0';
+		document.getElementById(quant.id).defaultValue=0;
+		document.getElementById(quant.id).type="number";
+		document.getElementById(quant.id).required=true;
 		document.getElementById(quant.id).style.width = "100%%";
 		document.getElementById(quant.id).style.textAlign = "center";
 		</script>
@@ -73,7 +113,8 @@ for res_row in results:
 	index+=1
 print """
 	</table>
-	<button type="button" style="margin: 0 auto;">Checkout</button>
-	<button type="button" style="margin:0 auto;">Add Item</button>
+	<button type="button">Checkout</button>
+	<button type="button" onclick=addItems()>Add Item</button>
+	
 	</body>
 	</html>"""
