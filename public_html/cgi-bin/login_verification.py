@@ -25,6 +25,7 @@ if cursor.rowcount == 1:
 		<body>
 		<script type='text/javascript'>
 		alert('Login Successful!')
+		window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
 		</script>
 		</body>
 		</html>"""

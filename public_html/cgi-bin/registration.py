@@ -12,7 +12,7 @@ print"""Content-type:text/html\r\n\r\n
 <body>
 <h1>Registration</h1><br>
 <form name='reg' action='http://localhost/~coursework/cgi-bin/account_creation.py' method='get'>
-First Name: <input type='text' name='first_name' value="%s" requiredbr>
+First Name: <input type='text' name='first_name' value="%s" required><br>
 Last Name: <input type='text' name='last_name' value="%s" required><br>  
 User ID: <input type='text' name='user_id' value="%s" required><br>
 Password: <input type='password' name='passwd' required><br>
