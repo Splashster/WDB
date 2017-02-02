@@ -17,6 +17,8 @@ form_items = cgi.FieldStorage()
 useriden = form_items.getvalue('userident')
 user_pass = form_items.getvalue('user_passwd')
 
+
+
 command = "SELECT * FROM `Inventory`"
 cursor.execute(command)
 results = cursor.fetchall()
