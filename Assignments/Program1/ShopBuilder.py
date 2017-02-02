@@ -57,8 +57,7 @@ def initialize_db(con, cursor):
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('87890CR','Firewall',
 			  	  'The most epic Firewall you will ever buy', 10000.00))
 
-	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('KO2304','IDS/IPS',"'Intrusion" 
-		     		  "Detection System/Intrusion Prevention System'", 980.00))
+	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('KO2304','IDS/IPS',"Intrusion Detection System/Intrusion Prevention System", 980.00))
 
 	insert_items(con, cursor, "`Inventory`","(`id`,`prod_name`,`description`,`price`)","(%s,%s,%s,%s)",('99233KOP','VPN','Virtual Private Network'
 		    		 , 5.99))
