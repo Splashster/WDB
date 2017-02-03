@@ -51,7 +51,7 @@ print """Content-type:text/html\r\n\r\n
 <body>
 <h1 align="center">Checkout</h1>
 <p><b>Thank you for shoping at Awesome Sales!</b></p>
-<p><b>We value you time and hope you found everything you were looking for!</b></p>
+<p><b>We value your time and hope you found everything you were looking for!</b></p>
 <p><b>Below is a copy of your receipt</b></p>
 <p><b>Please come back and see us!</b></p>
 <script type='text/javascript'>

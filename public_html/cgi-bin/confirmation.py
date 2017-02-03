@@ -15,4 +15,4 @@ print """Content-type:text/html\r\n\r\n
 	</body>
 	</html>"""%(sale_total)
 
-email_receipt.sendEmail()
+email_receipt.sendEmail(items,sale_total)
