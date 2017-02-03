@@ -77,8 +77,8 @@ function removeCookies(){
 	createCookie("username","",-1);
 	createCookie("cart_items","",-1);
 }
-function emailReceipt(){
-	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.py?purchsed_items='+%s;"""%(purchased_items)
+function emailReceipt(sale_total){
+	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.py?total='+sale_total+'&purchased_items='+%s;"""%(purchased_items)
 print """
 }
 removeCookies();
@@ -147,6 +147,6 @@ print"""
 	cell4.innerHTML = sale_total.toFixed(2).bold();
 </script>
 </table><br>
-<button onclick=emailReceipt()>Email Receipt</button>
+<button onclick=emailReceipt(sale_total.toFixed(2))>Email Receipt</button>
 </body>
 </html>"""
