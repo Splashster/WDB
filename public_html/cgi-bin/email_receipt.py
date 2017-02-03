@@ -30,20 +30,32 @@ def sendEmail(purchased_items,total):
 	Subject: Receipt of Purchase
 
 
-	Thank you for shoping at Awesome Sales!
-	We value your time and hope you found everything you were looking for!
-	Below is the total amount you have been charged. For a more detailed receipt,
-	please refer back to the checkout page. If you are unable to get this information, just call us.
+Thank you for shoping at Awesome Sales!
+We value your time and hope you found everything you were looking for!
+Below is the total amount you have been charged. For a more detailed receipt,
+please refer back to the checkout page. If you are unable to get this information, just call us.
+
+	Purchased Items
+"""
+	row_headers = ["Product ID", "Product Name", "Price Each", "Quantity Purchased"];
+	for row in row_headers:
+		msg+= """\t%s"""%("{:<18}".format(row))
+	msg+="\n"	
+	for s in total_item:
+		for x in s:
+			msg+= """\t%s"""%("{:<20}".format(x))
+		msg+="\n"
+	msg+="""
 
 	Total: %s
 
-	Please come back and see us!
+Please come back and see us!
 
-	Sincerely,
+Sincerely,
 	
 
-	Awesome Sales Team
-	"""%(total)
+Awesome Sales Team
+"""%(total)
 
 	try:
 		smtpObj = smtplib.SMTP('localhost')
