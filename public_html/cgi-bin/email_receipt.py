@@ -48,7 +48,7 @@ please refer back to the checkout page. If you are unable to get this informatio
 		msg+="\n"
 	msg+="""
 
-	Total: %s
+	Total: $%s
 
 Please come back and see us!
 

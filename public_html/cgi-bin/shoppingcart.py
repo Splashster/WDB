@@ -53,6 +53,8 @@ function removeCookies(){
 	createCookie("username","",-1);
 	createCookie("cart_items","",-1);
 }
+
+	
 function addItems(){
 var purchases = []
 var items = {}
@@ -60,6 +62,9 @@ var quan"""
 for r in results:
 	print """
 	quan = document.getElementById("quantity"+"%s").value;
+	if(quan === undefined || quan == ""){
+		quan = '0';
+	}
 	document.getElementById("quantity"+"%s").value = 0;
 	in_cart =  document.getElementById("shop_tb").rows[%s].cells[4].innerText;
 	total_in_cart = parseInt(in_cart) + parseInt(quan);

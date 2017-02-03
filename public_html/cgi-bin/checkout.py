@@ -17,10 +17,7 @@ cursor = con.cursor(buffered=True)
 
 form_items = cgi.FieldStorage()
 useriden = form_items.getvalue('userid')
-#items = json.loads(form_items.getvalue('items'))
-
-useriden = 'Splash'
-items = {"CH1203":1,"KIJ232103":1}
+items = json.loads(form_items.getvalue('items'))
 
 command = "SELECT * FROM `UserAccounts` where id=%s"
 cursor.execute(command, (useriden,))
@@ -134,7 +131,7 @@ for i in purchased_items:
 	item_price = "%s";
 	item_total = Number(item_price.replace(/[^0-9\.]+/g,""));
 	item_total = parseFloat(item_total) * %s;
-	cell4.innerHTML = item_total.toFixed(2).bold();
+	cell4.innerHTML = '$'+item_total.toFixed(2).bold();
 	sale_total= sale_total + item_total;
 """%(i[0],i[1],i[3],i[2], i[3])
 print"""
@@ -149,7 +146,7 @@ print"""
 	row.deleteCell(2);
 	row.deleteCell(1);
 	cell1.colSpan = "3";
-	cell4.innerHTML = sale_total.toFixed(2).bold();
+	cell4.innerHTML = '$'+sale_total.toFixed(2).bold();
 </script>
 </table><br>
 <button onclick=emailReceipt(sale_total.toFixed(2))>Email Receipt</button>
