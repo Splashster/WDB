@@ -93,7 +93,10 @@ try{
 		}
 	}
 	window.location.href='http://localhost/~coursework/cgi-bin/checkout.py?userid='+useriden+'&items='+JSON.stringify(final_list);
-}catch(e){}}
+}catch(e){
+	alert('Your cart is empty!');
+	window.location.reload()
+}}
 </script>
 </head>
 <body>

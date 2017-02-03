@@ -78,6 +78,7 @@ else:
 		<body>
 		<script type='text/javascript'>
 		alert('Username/Password is Incorrect!')
+		window.location.href='http://localhost/~coursework/cgi-bin/userlogin.py'
 		</script>
 		</body>
 		</html>"""

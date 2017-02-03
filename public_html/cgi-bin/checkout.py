@@ -50,11 +50,13 @@ print """Content-type:text/html\r\n\r\n
 <title>Checkout Screen</title>
 </head>
 <body>
+<div align="center">
 <h1 align="center">Checkout</h1>
 <p><b>Thank you for shoping at Awesome Sales!</b></p>
 <p><b>We value your time and hope you found everything you were looking for!</b></p>
 <p><b>Below is a copy of your receipt</b></p>
 <p><b>Please come back and see us!</b></p>
+</div>
 <script type='text/javascript'>
 function createCookie(cname,cvalue,expiretime){
 var d = new Date();
@@ -146,9 +148,9 @@ print"""
 	row.deleteCell(2);
 	row.deleteCell(1);
 	cell1.colSpan = "3";
-	cell4.innerHTML = '$'+sale_total.toFixed(2).bold();
+	cell4.innerHTML = sale_total.toFixed(2).bold();
 </script>
 </table><br>
-<button onclick=emailReceipt(sale_total.toFixed(2))>style="margin-left:47.6px;"Email Receipt</button>
+<button onclick=emailReceipt(sale_total.toFixed(2)) style="margin-left:47.5%">Email Receipt</button>
 </body>
 </html>"""
