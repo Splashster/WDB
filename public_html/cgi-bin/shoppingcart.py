@@ -60,17 +60,20 @@ var user=getCookie("username")
 var quantities = JSON.parse( getCookie("cart_items"))
 console.log(quantities);
 if(user != " "){
-	alert('Welcome ' + quantities['1239239CR'] + '!');
+	alert('Welcome ' + quantities["C12345R"] + '!');
 }else{
 	alert('Dont know who you are!');
 }}
 function addItems(){
 var purchases = []
-var items = {}
-items["%s"]="20";
-purchases.push(JSON.stringify(items));
-	"""%(results[0][0])
+var items = {}"""
+for r in results:
+	print """
+	items["%s"]="20";
+	"""%(r[0])
 print """
+purchases.push(JSON.stringify(items));
+console.log(purchases)
 createCookie("cart_items",purchases,30);
 checkCookie();	
 }
