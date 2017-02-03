@@ -11,9 +11,9 @@ l_name = form_items.getvalue('l_name')
 print """Content-type:text/html\r\n\r\n
 	<html>
 	<body>
-	<p> Email Sent</p>
-	%s %s
+	<p><b> Receipt has been sent.</b></p>
+	<p><b> You should be receiving it shortly.</b></p>
 	</body>
-	</html>"""%(f_name,l_name)
+	</html>"""
 
 email_receipt.sendEmail(items,sale_total,f_name,l_name)
