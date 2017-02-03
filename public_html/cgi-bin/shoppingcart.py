@@ -86,7 +86,7 @@ try{
 			final_list[i]=cart[i];
 		}
 	}
-	window.location.href='http://localhost/~coursework/cgi-bin/email.py?userid='+useriden+'&items='+JSON.stringify(final_list);
+	window.location.href='http://localhost/~coursework/cgi-bin/checkout.py?userid='+useriden+'&items='+JSON.stringify(final_list);
 }catch(e){}}
 </script>
 </head>
