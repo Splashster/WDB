@@ -8,7 +8,7 @@ import json
 import smtplib
 
 
-def sendEmail(purchased_items,total):
+def sendEmail(purchased_items,total,first_name,last_name):
 	sender = 'coursework@coursework.csc.tntech.edu'
 	receiver = 'coursework@coursework.csc.tntech.edu'
 	
@@ -26,9 +26,10 @@ def sendEmail(purchased_items,total):
 			index+=1
 	
 	msg = """From: Awesome Sales<coursework@coursework>
-	To: To Person <coursework@coursework>
+	To: To %s %s  <coursework@coursework>
 	Subject: Receipt of Purchase
 
+Hello %s %s,
 
 Thank you for shoping at Awesome Sales!
 We value your time and hope you found everything you were looking for!
@@ -36,7 +37,7 @@ Below is the total amount you have been charged. For a more detailed receipt,
 please refer back to the checkout page. If you are unable to get this information, just call us.
 
 	Purchased Items
-"""
+"""%(first_name, last_name, first_name, last_name)
 	row_headers = ["Product ID", "Product Name", "Price Each", "Quantity Purchased"];
 	for row in row_headers:
 		msg+= """\t%s"""%("{:<18}".format(row))

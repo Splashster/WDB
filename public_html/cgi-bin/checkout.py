@@ -17,14 +17,19 @@ cursor = con.cursor(buffered=True)
 
 form_items = cgi.FieldStorage()
 useriden = form_items.getvalue('userid')
-items = json.loads(form_items.getvalue('items'))
+#items = json.loads(form_items.getvalue('items'))
 
-#useriden = '123'
-#items = {"CH1203":1,"KIJ232103":1}
+useriden = 'Splash'
+items = {"CH1203":1,"KIJ232103":1}
 
 command = "SELECT * FROM `UserAccounts` where id=%s"
 cursor.execute(command, (useriden,))
 userinfo = cursor.fetchall()
+first_name = ""
+last_name = ""
+for info in userinfo:
+	first_name = info[1].encode('ascii')
+	last_name = info[2].encode('ascii')
 total_price = 0
 purchased_item = []
 purchased_items = []
@@ -41,7 +46,6 @@ for k in items:
 			purchased_items.append(purchased_item)
 	purchased_item=[]
 	
-
 
 print """Content-type:text/html\r\n\r\n
 <html>
@@ -78,7 +82,8 @@ function removeCookies(){
 	createCookie("cart_items","",-1);
 }
 function emailReceipt(sale_total){
-	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.py?total='+sale_total+'&purchased_items='+%s;"""%(purchased_items)
+
+	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.py?total='+sale_total+'&purchased_items='+%s+'&f_name=%s&l_name=%s';"""%(purchased_items,first_name,last_name)
 print """
 }
 removeCookies();
