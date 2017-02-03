@@ -16,8 +16,6 @@ form_items = cgi.FieldStorage()
 useriden = form_items.getvalue('userident')
 user_pass = form_items.getvalue('user_passwd')
 
-#useriden = '123'
-#user_pass = '123'
 
 command = "SELECT * FROM `UserAccounts` where id=%s and password=%s"
 cursor.execute(command, (useriden, user_pass))
@@ -45,23 +43,35 @@ if cursor.rowcount == 1:
 		if(c.indexOf(name) == 0){
 			return c.substring(name.length, c.length);
 		} } return " "; }
+		function removeCookies(){
+			createCookie("username","",-1);
+			createCookie("cart_items","",-1);
+		}
 		function checkCookie() {
 		var user=getCookie("username")
-		if(user != ""){
-			alert('Welcome ' + user + '!');
-		}else{
-			alert('Dont know who you are!');
+		if(user == '%s'){
+			alert('Welcome back ' + user + '!');
+			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+		}else if(user != ""){
+			removeCookies();	
+			createCookie("username",'%s',1);
+			alert('Welcome %s!');
+			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+
+		}
+		else{
+			alert('Welcome %s!');
+			createCookie("username",'%s',1);
+			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
 		}}
 		</script>
 		</head>
 		<body>
 		<script type="text/javascript">
-		createCookie("username",'%s',30);
-		checkCookie();	
-		window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+			checkCookie();	
 		</script>		
 		</body>
-		</html>"""%(useriden)
+		</html>"""%(useriden,useriden,useriden,useriden,useriden)
 else:
 	print """Content-type:text/html\r\n\r\n
 		<html>

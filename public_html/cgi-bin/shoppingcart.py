@@ -146,7 +146,7 @@ for res_row in results:
 print """
 	</table>
 	
-	<button type="button" onclick=checkOut()>Checkout</button>"""
+	<button type="button" onclick=checkOut() style="margin-left:45.4%;">Checkout</button>"""
 print"""
 	<button type="button" onclick=addItems()>Add Item</button>
 	

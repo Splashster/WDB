@@ -149,6 +149,6 @@ print"""
 	cell4.innerHTML = '$'+sale_total.toFixed(2).bold();
 </script>
 </table><br>
-<button onclick=emailReceipt(sale_total.toFixed(2))>Email Receipt</button>
+<button onclick=emailReceipt(sale_total.toFixed(2))>style="margin-left:47.6px;"Email Receipt</button>
 </body>
 </html>"""

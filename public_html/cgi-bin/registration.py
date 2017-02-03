@@ -12,12 +12,12 @@ print"""Content-type:text/html\r\n\r\n
 <body>
 <h1>Registration</h1><br>
 <form name='reg' action='http://localhost/~coursework/cgi-bin/account_creation.py' method='get'>
-First Name: <input type='text' name='first_name' value="%s" required><br>
-Last Name: <input type='text' name='last_name' value="%s" required><br>  
-User ID: <input type='text' name='user_id' value="%s" required><br>
-Password: <input type='password' name='passwd' required><br>
+First Name: <input type='text' name='first_name' value="%s" style="margin-left:60px; "required><br>
+Last Name: <input type='text' name='last_name' value="%s" style="margin-left:63px; "required><br>  
+User ID: <input type='text' name='user_id' value="%s" style="margin-left:90px;" required><br>
+Password: <input type='password' name='passwd' style="margin-left:72px;" required><br>
 Confirm Password: <input type='password' name=conf_passwd required><br>
-Email: <input type='text' name='email' value="%s" required><br>
+Email: <input type='text' name='email' value="%s" style="margin-left:106px;"required><br>
 <input type = 'submit' onclick='return validateInformation();' value='Register'/>
 <script type='text/javascript'>
 function validateInformation(){

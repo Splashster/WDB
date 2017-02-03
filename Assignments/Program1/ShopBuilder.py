@@ -40,11 +40,6 @@ def initialize_db(con, cursor):
 	create_table(cursor, "`Inventory`", "(`id` varchar(10) NOT NULL, `prod_name` varchar(20) NOT NULL,`description`"
 		     	     "varchar(50), `price` varchar(9)  NOT NULL, PRIMARY KEY(id))")
 
-	create_table(cursor, "`Purchases`", "(`purchase_id` varchar(15) NOT NULL, `user_id` varchar(15) NOT NULL, `prod_id` varchar(10) NOT NULL,"
-					   "`quantity` int NOT NULL, PRIMARY KEY(purchase_id), INDEX(user_id), INDEX(prod_id),"
-					   " FOREIGN KEY(user_id) REFERENCES UserAccounts(id), FOREIGN KEY(prod_id) REFERENCES Inventory(id))") 
-
-
 	insert_items(con, cursor, "UserAccounts", "(id ,first_name, last_name, password, email)", "(%s,%s,%s,%s,%s)", ('1232ad', 'Darren', 'Cunningham'
 			  	, 'pass', 'ois@gmail.com'))
 		
