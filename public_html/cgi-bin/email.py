@@ -4,6 +4,7 @@ import cgi
 import os
 import sys
 import mysql.connector
+import json
 
 sys.path.append('/home/coursework/Assignments/Program1/')
 
@@ -14,11 +15,11 @@ con = mysql.connector.connect(user=user, password=passwd, host=host, database=db
 cursor = con.cursor(buffered=True)
 
 form_items = cgi.FieldStorage()
-useriden = form_items.getvalue('userid')
-items = form_items.getvalue('items')
+#useriden = form_items.getvalue('userid')
+#items = json.loads(form_items.getvalue('items'))
 
-#useriden = '123'
-#items = {"CH1203":1}
+useriden = '123'
+items = {"CH1203":1,"KIJ232103":1}
 
 command = "SELECT * FROM `UserAccounts` where id=%s"
 cursor.execute(command, (useriden,))
@@ -30,13 +31,15 @@ quantity = []
 for k in items:
 	command = "SELECT id, prod_name,price FROM `Inventory` where id=%s"
 	cursor.execute(command,(k,))
-	quantity.append(items[k])
-	item_result = cursor.fetchall()
-	item = (item_result + quantity)
-	purchased_item.append(item)
-	purchased_items.append(purchased_item)
+	for i in cursor.fetchall():
+		if(k == i[0]):
+			purchased_item.append(i[0].encode('ascii'))
+			purchased_item.append(i[1].encode('ascii'))
+			purchased_item.append(i[2].encode('ascii'))
+			purchased_item.append(items[k])
+			purchased_items.append(purchased_item)
+	purchased_item=[]
 	
-print purchased_items
 
 
 print """Content-type:text/html\r\n\r\n
@@ -66,12 +69,9 @@ function removeCookies(){
 	createCookie("cart_items","",-1);
 }
 
-for(i in %s){
-console.log(i)
-}"""%(purchased_items)
-print """
 removeCookies();
-
+console.log(%s)"""%(purchased_items)
+print """
 </script>
 </body>
 </html>"""
