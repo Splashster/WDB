@@ -44,7 +44,15 @@ for k in items:
 
 print """Content-type:text/html\r\n\r\n
 <html>
+<head>
+<title>Checkout Screen</title>
+</head>
 <body>
+<h1 align="center">Chcekout</h1>
+<p>Thank you for shoping at Awesome Sales!</p>
+<p>We value you time and hope you found everything you were looking for!</p>
+<p>Below is a copy of your receipt</p>
+<p>Please come back and see us!</p>
 <script type='text/javascript'>
 function createCookie(cname,cvalue,expiretime){
 var d = new Date();
@@ -73,5 +81,61 @@ removeCookies();
 console.log(%s)"""%(purchased_items)
 print """
 </script>
+<style>
+table {
+	width:100%;
+}
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+th, td {
+	padding: 5px;
+	text-align:left;
+}
+tr {
+	background-color:#eee;
+}
+th {
+	background-color:black;
+	color:white;
+}
+</style>
+<table id='checkout_tb' style="width:100%">
+<tr>
+<th>Product Id</th>
+<th>Product Name</th>
+<th>In Cart</th>
+<th>Total</th>
+</tr>
+<script type='text/javascript'>
+var item_total = 0;
+var item_price = 0;
+var sale_total = 0;
+"""
+for i in purchased_items:
+	print """
+	var table = document.getElementById('checkout_tb');
+	var row = table.insertRow(-1);
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+	cell1.innerHTML = '%s';
+	cell2.innerHTML = '%s';
+	cell3.innerHTML = '%s';
+	item_price = "%s";
+	item_total = Number(item_price.replace(/[^0-9\.]+/g,""));
+	item_total = parseFloat(item_total) * %s;
+	cell4.innerHTML = item_total;
+	sale_total= sale_total + item_total;
+"""%(i[0],i[1],i[3],i[2], i[3])
+print"""
+
+	var table = document.getElementById('checkout_tb');	
+	var cell4 = row.insertCell(4);
+	cell4.innerHTML = sale_total.toFixed(2);
+</script>
+</table>
 </body>
 </html>"""
