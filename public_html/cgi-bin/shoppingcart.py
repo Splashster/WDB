@@ -55,28 +55,40 @@ if(c.indexOf(name) == 0){
 	return c.substring(name.length, c.length);
 } } return " "; }
 
-function checkCookie() {
+function setFields() {
 var user=getCookie("username")
 var quantities = JSON.parse( getCookie("cart_items"))
-console.log(quantities);
-if(user != " "){
+var rows = 0
+for(item in quantities){
+		 
+}
+if(1){
 	alert('Welcome ' + quantities["C12345R"] + '!');
 }else{
 	alert('Dont know who you are!');
 }}
 function addItems(){
 var purchases = []
-var items = {}"""
+var items = {}
+var quan"""
 for r in results:
 	print """
-	items["%s"]=document.getElementById("quantity"+"%s").value;
-	"""%(r[0],rowcount)
+	quan = document.getElementById("quantity"+"%s").value;
+	document.getElementById("quantity"+"%s").value = 0;
+	in_cart =  document.getElementById("shop_tb").rows[%s].cells[4].innerText;
+	total_in_cart = parseInt(in_cart) + parseInt(quan);
+	if(total_in_cart < 0){
+		total_in_cart = 0;
+	}
+	document.getElementById("shop_tb").rows[%s].cells[4].innerHTML = total_in_cart;
+	items[%s]=total_in_cart;
+	
+	"""%(rowcount,rowcount,rowcount+1,rowcount+1,rowcount)
 	rowcount+=1
 print """
 purchases.push(JSON.stringify(items));
-console.log(purchases)
 createCookie("cart_items",purchases,30);
-checkCookie();	
+setFields();	
 }
 </script>
 </head>
