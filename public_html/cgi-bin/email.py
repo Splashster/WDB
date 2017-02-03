@@ -48,11 +48,11 @@ print """Content-type:text/html\r\n\r\n
 <title>Checkout Screen</title>
 </head>
 <body>
-<h1 align="center">Chcekout</h1>
-<p>Thank you for shoping at Awesome Sales!</p>
-<p>We value you time and hope you found everything you were looking for!</p>
-<p>Below is a copy of your receipt</p>
-<p>Please come back and see us!</p>
+<h1 align="center">Checkout</h1>
+<p><b>Thank you for shoping at Awesome Sales!</b></p>
+<p><b>We value you time and hope you found everything you were looking for!</b></p>
+<p><b>Below is a copy of your receipt</b></p>
+<p><b>Please come back and see us!</b></p>
 <script type='text/javascript'>
 function createCookie(cname,cvalue,expiretime){
 var d = new Date();
@@ -121,20 +121,28 @@ for i in purchased_items:
 	var cell2 = row.insertCell(1);
 	var cell3 = row.insertCell(2);
 	var cell4 = row.insertCell(3);
-	cell1.innerHTML = '%s';
-	cell2.innerHTML = '%s';
-	cell3.innerHTML = '%s';
+	cell1.innerHTML = '%s'.bold();
+	cell2.innerHTML = '%s'.bold();
+	cell3.innerHTML = '%s'.bold();
 	item_price = "%s";
 	item_total = Number(item_price.replace(/[^0-9\.]+/g,""));
 	item_total = parseFloat(item_total) * %s;
-	cell4.innerHTML = item_total;
+	cell4.innerHTML = item_total.toFixed(2).bold();
 	sale_total= sale_total + item_total;
 """%(i[0],i[1],i[3],i[2], i[3])
 print"""
 
 	var table = document.getElementById('checkout_tb');	
-	var cell4 = row.insertCell(4);
-	cell4.innerHTML = sale_total.toFixed(2);
+	var row = table.insertRow(-1);	
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+	cell1.innerHTML = "Comments:".bold();
+	row.deleteCell(2);
+	row.deleteCell(1);
+	cell1.colSpan = "3";
+	cell4.innerHTML = sale_total.toFixed(2).bold();
 </script>
 </table>
 </body>
