@@ -54,19 +54,10 @@ while (c.charAt(0) == ' '){
 if(c.indexOf(name) == 0){
 	return c.substring(name.length, c.length);
 } } return " "; }
-
-function setFields() {
-var user=getCookie("username")
-var quantities = JSON.parse( getCookie("cart_items"))
-var rows = 0
-for(item in quantities){
-		 
+function removeCookies(){
+	createCookie("username","",-1);
+	createCookie("cart_items","",-1);
 }
-if(1){
-	alert('Welcome ' + quantities["C12345R"] + '!');
-}else{
-	alert('Dont know who you are!');
-}}
 function addItems(){
 var purchases = []
 var items = {}
@@ -81,14 +72,13 @@ for r in results:
 		total_in_cart = 0;
 	}
 	document.getElementById("shop_tb").rows[%s].cells[4].innerHTML = total_in_cart;
-	items[%s]=total_in_cart;
+	items["%s"]=total_in_cart;
 	
-	"""%(rowcount,rowcount,rowcount+1,rowcount+1,rowcount)
+	"""%(rowcount,rowcount,rowcount+1,rowcount+1,r[0])
 	rowcount+=1
 print """
 purchases.push(JSON.stringify(items));
 createCookie("cart_items",purchases,30);
-setFields();	
 }
 </script>
 </head>
@@ -106,6 +96,11 @@ setFields();
 for res_row in results:
 	print """
 		<script type='text/javascript'>
+		var quan = "";
+		try{
+			var quantities = JSON.parse( getCookie("cart_items"));
+			quan = quantities['%s'];
+		}catch(e){}
 		var table = document.getElementById('shop_tb');
 		var row = table.insertRow(-1);
 		var cell1 = row.insertCell(0);
@@ -118,7 +113,11 @@ for res_row in results:
 		cell2.innerHTML = '%s';
 		cell3.innerHTML = '%s';
 		cell4.innerHTML = '%s';
-		cell5.innerHTML = '0';
+		if(quan == "" || quan === undefined){
+			cell5.innerHTML = '0';
+		}else{
+			cell5.innerHTML = quan;
+		}
 		quant=document.createElement("input");
 		quant.id="quantity"+'%s';
 		cell6.appendChild(quant);
@@ -128,11 +127,12 @@ for res_row in results:
 		document.getElementById(quant.id).style.width = "100%%";
 		document.getElementById(quant.id).style.textAlign = "center";
 		</script>
-		"""%(res_row[0], res_row[1], res_row[2], res_row[3], index)
+		"""%(res_row[0],res_row[0], res_row[1], res_row[2], res_row[3], index)
 	index+=1
 print """
 	</table>
-	<button type="button">Checkout</button>
+	<button type="button" onclick=removeCookies()>Checkout</button>
+
 	<button type="button" onclick=addItems()>Add Item</button>
 	
 	</body>
