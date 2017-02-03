@@ -13,11 +13,6 @@ from Database import *
 con = mysql.connector.connect(user=user, password=passwd, host=host, database=db)
 cursor = con.cursor(buffered=True)
 
-form_items = cgi.FieldStorage()
-useriden = form_items.getvalue('userident')
-user_pass = form_items.getvalue('user_passwd')
-
-
 
 command = "SELECT * FROM `Inventory`"
 cursor.execute(command)
@@ -80,6 +75,19 @@ print """
 purchases.push(JSON.stringify(items));
 createCookie("cart_items",purchases,30);
 }
+function checkOut(){
+var useriden = getCookie("username");
+try{	
+	var final_list = {};
+	var cart = JSON.parse(getCookie("cart_items"));
+	for(i in cart){
+		console.log(cart[i]);
+		if(cart[i] > 0){
+			final_list[i]=cart[i];
+		}
+	}
+	window.location.href='http://localhost/~coursework/cgi-bin/email.py?userid='+useriden+'&items='+JSON.stringify(final_list);
+}catch(e){}}
 </script>
 </head>
 <body>
@@ -131,8 +139,9 @@ for res_row in results:
 	index+=1
 print """
 	</table>
-	<button type="button" onclick=removeCookies()>Checkout</button>
-
+	
+	<button type="button" onclick=checkOut()>Checkout</button>"""
+print"""
 	<button type="button" onclick=addItems()>Add Item</button>
 	
 	</body>
