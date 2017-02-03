@@ -74,6 +74,7 @@ for r in results:
 print """
 purchases.push(JSON.stringify(items));
 createCookie("cart_items",purchases,30);
+window.location.reload();
 }
 function checkOut(){
 var useriden = getCookie("username");

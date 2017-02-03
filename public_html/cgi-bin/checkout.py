@@ -16,11 +16,11 @@ con = mysql.connector.connect(user=user, password=passwd, host=host, database=db
 cursor = con.cursor(buffered=True)
 
 form_items = cgi.FieldStorage()
-#useriden = form_items.getvalue('userid')
-#items = json.loads(form_items.getvalue('items'))
+useriden = form_items.getvalue('userid')
+items = json.loads(form_items.getvalue('items'))
 
-useriden = '123'
-items = {"CH1203":1,"KIJ232103":1}
+#useriden = '123'
+#items = {"CH1203":1,"KIJ232103":1}
 
 command = "SELECT * FROM `UserAccounts` where id=%s"
 cursor.execute(command, (useriden,))
@@ -78,7 +78,8 @@ function removeCookies(){
 	createCookie("cart_items","",-1);
 }
 function emailReceipt(){
-	window.location.href='http://localhost/~coursework/cgi-bin/email_receipt.py';
+	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.py?purchsed_items='+%s;"""%(purchased_items)
+print """
 }
 removeCookies();
 </script>
@@ -145,7 +146,7 @@ print"""
 	cell1.colSpan = "3";
 	cell4.innerHTML = sale_total.toFixed(2).bold();
 </script>
-</table>
+</table><br>
 <button onclick=emailReceipt()>Email Receipt</button>
 </body>
 </html>"""
