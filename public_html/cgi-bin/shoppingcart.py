@@ -69,8 +69,9 @@ var purchases = []
 var items = {}"""
 for r in results:
 	print """
-	items["%s"]="20";
-	"""%(r[0])
+	items["%s"]=document.getElementById("quantity"+"%s").value;
+	"""%(r[0],rowcount)
+	rowcount+=1
 print """
 purchases.push(JSON.stringify(items));
 console.log(purchases)
