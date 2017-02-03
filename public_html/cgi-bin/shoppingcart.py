@@ -57,18 +57,21 @@ if(c.indexOf(name) == 0){
 
 function checkCookie() {
 var user=getCookie("username")
+var quantities = JSON.parse( getCookie("cart_items"))
+console.log(quantities);
 if(user != " "){
-	alert('Welcome ' + user + '!');
+	alert('Welcome ' + quantities['1239239CR'] + '!');
 }else{
 	alert('Dont know who you are!');
 }}
 function addItems(){
-var purchases = {}"""
-for r in results:
-	print """ purchases["%s"]=20;
-	"""%(r[0])
+var purchases = []
+var items = {}
+items["%s"]="20";
+purchases.push(JSON.stringify(items));
+	"""%(results[0][0])
 print """
-createCookie("cart_items",purchases,1);
+createCookie("cart_items",purchases,30);
 checkCookie();	
 }
 </script>
