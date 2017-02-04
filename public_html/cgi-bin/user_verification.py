@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+'''
+The purpose of this script is to verify that the user id isnt taken.
+If the id is not taken, it will proceed to register them into the database.
+'''
+
 import sys
 import os
 import mysql.connector
@@ -9,9 +14,9 @@ sys.path.append('/home/coursework/public_html/Builder/')
 from Database import *
 
 def validate(userid, f_name, l_name, userpass, email_add):
-	'''
+	"""
 	Validate that the User's ID has not already been taken
-	'''
+	"""
 
 	con = mysql.connector.connect(user=user, password=passwd, host=host,
 	 database=db)

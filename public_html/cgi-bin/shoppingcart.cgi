@@ -1,5 +1,13 @@
 #!/usr/bin/python
 
+'''
+The purpose of this script is the allow the user to select what items they would like to purchase.
+In this script, cookies are generted, handled, removed, and the shopping cart table is generated,
+and populated.
+This script also will send the user to the checkout screen when the user has at least 1 item in their 
+cart and they hit the checkout button
+
+'''
 import cgi
 import os
 import sys

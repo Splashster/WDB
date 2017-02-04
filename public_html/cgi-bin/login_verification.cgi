@@ -1,5 +1,20 @@
 #!/usr/bin/python
 
+'''
+The purpose of thie script is to verify the user's information when they
+try to login in using the user login webpage.
+The script creates, handles, and removes cookies.
+If the user's information is valid, it will welcome the user and proceed to the
+shopingcart webpage.
+If the user previously had items in the cart, did not complete their purchase, and
+another user has not logged in yet, the script will welcome them back.
+If the user if the user did complete their purchase or another user did log in, the
+script will just welcome the user.
+If the user's information is invalid, it will tell them their username/password
+is incorrect.
+'''
+
+
 import cgi
 import os
 import sys

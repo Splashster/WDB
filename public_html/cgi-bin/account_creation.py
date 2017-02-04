@@ -1,5 +1,13 @@
 #!/usr/bin/python
 
+'''
+The purpose of this file is to validate that the to be registered user id is not already taken.
+If the user id is not taken, the script alerts the user that the account creation was sucessful
+and proceeds to the user login page.
+If the user id was taken, the script alerts the user that the user id exists and returns them
+to the registration page.
+'''
+
 import cgi
 import user_verification
 

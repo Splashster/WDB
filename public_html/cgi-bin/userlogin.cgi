@@ -1,5 +1,13 @@
 #!/usr/bin/python
 
+'''
+The purpose of this script is to allow the user to login to the system.
+Both username and password are required to go anywhere.
+If the user attempts to login, the script proceeds to the login_verification script.
+The user can also click the register a new user hyperlink. Which, will send them
+to the registration page.
+'''
+
 import os
 import sys
 import cgi

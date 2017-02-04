@@ -1,4 +1,11 @@
 #!/usr/bin/python
+
+'''
+The purpose of this script is to let the user know that an email
+of their receipt has been sent to them. It also calls a function
+from the email receipt module which sends the email.
+'''
+
 import email_receipt
 import cgi
 

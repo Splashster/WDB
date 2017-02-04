@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+'''
+The purpose of this script is to display the users shopping receipt
+The user is able to see each item they bought, the quantity, and total 
+price. There is also a comment section on the receipt for randomness...
+'''
+
 import cgi
 import os
 import sys
