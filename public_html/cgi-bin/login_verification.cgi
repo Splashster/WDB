@@ -5,7 +5,7 @@ import os
 import sys
 import mysql.connector
 
-sys.path.append('/home/coursework/Assignments/Program1/')
+sys.path.append('/home/coursework/public_html/Builder/')
 
 from Database import *
 
@@ -51,18 +51,18 @@ if cursor.rowcount == 1:
 		var user=getCookie("username")
 		if(user == '%s'){
 			alert('Welcome back ' + user + '!');
-			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.cgi'
 		}else if(user != ""){
 			removeCookies();	
 			createCookie("username",'%s',1);
 			alert('Welcome %s!');
-			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.cgi'
 
 		}
 		else{
 			alert('Welcome %s!');
 			createCookie("username",'%s',1);
-			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.py'
+			window.location.href = 'http://localhost/~coursework/cgi-bin/shoppingcart.cgi'
 		}}
 		</script>
 		</head>
@@ -78,7 +78,7 @@ else:
 		<body>
 		<script type='text/javascript'>
 		alert('Username/Password is Incorrect!')
-		window.location.href='http://localhost/~coursework/cgi-bin/userlogin.py'
+		window.location.href='http://localhost/~coursework/cgi-bin/userlogin.cgi'
 		</script>
 		</body>
 		</html>"""

@@ -26,13 +26,13 @@ if user_pass is not None:
 		user_verification.validate(userid, f_name, l_name, user_pass, email_add )
 		print """<script type='text/javascript'>
 		alert('Account Succesfully Created!')
-		window.location.href='http://localhost/~coursework/cgi-bin/userlogin.py'
+		window.location.href='http://localhost/~coursework/cgi-bin/userlogin.cgi'
 		</script>"""
 	except:
 		print """
 		<script type='text/javascript'>
 		alert('User ID already exists')
-		window.location.href='http://localhost/~coursework/cgi-bin/registration.py?first_name=%s&last_name=%s&user_id=%s&email=%s'
+		window.location.href='http://localhost/~coursework/cgi-bin/registration.cgi?first_name=%s&last_name=%s&user_id=%s&email=%s'
 		</script>
 		"""%(f_name,l_name,userid,email_add)
 	print """

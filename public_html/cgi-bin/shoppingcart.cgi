@@ -5,7 +5,7 @@ import os
 import sys
 import mysql.connector
 
-sys.path.append('/home/coursework/public_html/Assignments/Program1/')
+sys.path.append('/home/coursework/public_html/Builder/')
 
 from Database import *
 
@@ -83,20 +83,23 @@ window.location.reload();
 }
 function checkOut(){
 var useriden = getCookie("username");
+if(useriden == " " || useriden === undefined){
+	alert('Please login back in')
+	window.location.href='http://localhost/~coursework/cgi-bin/userlogin.cgi'
+}else{
 try{	
 	var final_list = {};
 	var cart = JSON.parse(getCookie("cart_items"));
 	for(i in cart){
-		console.log(cart[i]);
 		if(cart[i] > 0){
 			final_list[i]=cart[i];
 		}
 	}
-	window.location.href='http://localhost/~coursework/cgi-bin/checkout.py?userid='+useriden+'&items='+JSON.stringify(final_list);
+	window.location.href='http://localhost/~coursework/cgi-bin/checkout.cgi?userid='+useriden+'&items='+JSON.stringify(final_list);
 }catch(e){
 	alert('Your cart is empty!');
 	window.location.reload()
-}}
+}}}
 </script>
 </head>
 <body>

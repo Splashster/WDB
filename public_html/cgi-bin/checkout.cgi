@@ -7,7 +7,7 @@ import mysql.connector
 import json
 import smtplib
 
-sys.path.append('/home/coursework/public_html/Assignments/Program1/')
+sys.path.append('/home/coursework/public_html/Builder/')
 
 from Database import *
 
@@ -82,7 +82,7 @@ function removeCookies(){
 }
 function emailReceipt(sale_total){
 
-	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.py?total='+sale_total+'&purchased_items='+%s+'&f_name=%s&l_name=%s';"""%(purchased_items,first_name,last_name)
+	window.location.href='http://localhost/~coursework/cgi-bin/confirmation.cgi?total='+sale_total+'&purchased_items='+%s+'&f_name=%s&l_name=%s';"""%(purchased_items,first_name,last_name)
 print """
 }
 removeCookies();
