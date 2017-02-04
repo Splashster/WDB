@@ -4,7 +4,7 @@ import os
 import sys
 import cgi
 
-sys.path.append('/home/coursework/Assignments/Program1')
+sys.path.append('/home/coursework/public_html/Assignments/Program1')
 import ShopBuilder
 
 print """Content-type:text/html\r\n\r\n

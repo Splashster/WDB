@@ -33,10 +33,10 @@ Hello %s %s,
 
 Thank you for shoping at Awesome Sales!
 We value your time and hope you found everything you were looking for!
-Below is the total amount you have been charged. For a more detailed receipt,
-please refer back to the checkout page. If you are unable to get this information, just call us.
+Below is an  invoice for your order. If you have any questions please call us
+at 1-800-OHH-WELL.
 
-	Purchased Items
+	\t\t\t\tPurchased Items
 """%(first_name, last_name, first_name, last_name)
 	row_headers = ["Product ID", "Product Name", "Price Each", "Quantity Purchased"];
 	for row in row_headers:

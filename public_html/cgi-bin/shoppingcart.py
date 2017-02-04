@@ -5,7 +5,7 @@ import os
 import sys
 import mysql.connector
 
-sys.path.append('/home/coursework/Assignments/Program1/')
+sys.path.append('/home/coursework/public_html/Assignments/Program1/')
 
 from Database import *
 
