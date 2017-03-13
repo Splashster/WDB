@@ -2,7 +2,7 @@
 
 
 Initial Setup
-/--------------------------------------------------------------------------/
+/-------------------------------------------------------/
 Install python-pip (command apt-get install python-pip)
 Install python-lxml (command apt-get install python-lxml)
 The program expects the medsamp2012.xml document to be imported into baseX. The database name for the document must be medsamp2012.
