@@ -67,7 +67,10 @@ All Duplicate publication types have been removed.
 '''
 options = " "
 for i in sorted(publication_type_list):
-	options += """<option value="%s">%s</option>\n"""%(i,i)
+	if i == search_type: 
+		options += """<option value="%s" selected>%s</option>\n"""%(i,i)
+	else:
+		options += """<option value="%s">%s</option>\n"""%(i,i)
 
 
 def parseResponse(response, response_type):
@@ -272,10 +275,10 @@ def generateBaseXQuery():
 		xpath += "AuthorList/Author[LastName= '{0}' and ForeName='{1}']".format(lastname,forename)
 	if title_checkbox:
 		if oneChecked:
-			xpath += " and contains(ArticleTitle,'{0}')".format(title_content)
+			xpath += " and contains(lower-case(ArticleTitle),lower-case('{0}'))".format(title_content)
 		else:
 			oneChecked = True
-			xpath += "contains(ArticleTitle,'{0}')".format(title_content)
+			xpath += "contains(lower-case(ArticleTitle),lower-case('{0}'))".format(title_content)
 	if type_checkbox:
 		if oneChecked:
 			xpath += " and PublicationTypeList[PublicationType='{0}']".format(search_type)
@@ -284,10 +287,10 @@ def generateBaseXQuery():
 			xpath += "PublicationTypeList[PublicationType='{0}']".format(search_type)
 	if abstract_checkbox:
 		if oneChecked:
-			xpath += " and contains(Abstract,'{0}')".format(abstract_content)
+			xpath += " and contains(lower-case(Abstract),lower-case('{0}'))".format(abstract_content)
 		else:
 			oneChecked = True
-			xpath += "contains(Abstract,'{0}')".format(abstract_content)
+			xpath += "contains(lower-case(Abstract),lower-case('{0}'))".format(abstract_content)
 	
 	if oneChecked: 
 		xpath += "]"
@@ -308,10 +311,10 @@ def generateExistDBQuery():
 		xpath += "AUTHORS[AUTHOR= '{0}']".format(author)
 	if title_checkbox:
 		if oneChecked:
-			xpath += " and contains(TITLE,'{0}')".format(title_content)
+			xpath += " and contains(lower-case(TITLE),lower-case('{0}'))".format(title_content)
 		else:
 			oneChecked = True
-			xpath += "contains(TITLE,'{0}')".format(title_content)
+			xpath += "contains(lower-case(TITLE),lower-case('{0}'))".format(title_content)
 	if type_checkbox:
 		ref_val = publication_to_refnum.get(search_type) 
 		if oneChecked:
@@ -321,10 +324,10 @@ def generateExistDBQuery():
 			xpath += "REFERENCE_TYPE='{0}'".format(ref_val)
 	if abstract_checkbox:
 		if oneChecked:
-			xpath += " and contains(ABSTRACT,'{0}')".format(abstract_content)
+			xpath += " and contains(lower-case(ABSTRACT),lower-case('{0}'))".format(abstract_content)
 		else:
 			oneChecked = True
-			xpath += "contains(ABSTRACT,'{0}')".format(abstract_content)
+			xpath += "contains(lower-case(ABSTRACT),lower-case('{0}'))".format(abstract_content)
 	
 	if oneChecked: 
 		xpath += "]"
@@ -349,37 +352,64 @@ else:
 
 results_box = json.dumps( "Query Results: \n\n" + query_results.replace("<br>","\n"))
 
+if json.dumps(author) == "null":
+	author = ""
+else:
+	author = json.dumps(author)
+if json.dumps(title_content) == "null":
+	title_content = ""
+else:
+	title_content = json.dumps(title_content)
+if json.dumps(abstract_content) == "null":
+	abstract_content = ""
+
+if auth_checkbox:
+	auth_checkbox = "checked"
+else:
+	auth_checkbox = ""
+if title_checkbox:
+	title_checkbox = "checked"
+else:
+	title_checkbox = ""
+if type_checkbox:
+	type_checkbox = "checked"
+else:
+	type_checkbox = ""
+if abstract_checkbox:
+	abstract_checkbox = "checked"
+else:
+	abstract_checkbox = ""
+
 print """ Cotent-type:text/html\r\n\r\n
 <html>
 <body>
 <form action='http://localhost/~coursework/cgi-bin/bibfinder2.cgi' method='post'>
 <fieldset style="width:30%; margin-left:35%;">
 <label for="author_check" style="margin-right:10%;">
-<input name="auth_search" type="checkbox"> Search by Author
+<input name="auth_search" type="checkbox" {0}> Search by Author
 </label>
-Author's name: <input name="authorname" value={0} style="margin-left:2%;" type="text"><br> 
+Author's name: <input name="authorname"  style="margin-left:2%;" type="text" value={1}><br> 
 <label for="title_con" style="margin-right:12%;">
-<input name="title_con" type="checkbox"> Title contains...
+<input name="title_con" type="checkbox" {2}> Title contains...
 </label>
-Content: <input name="title_content" style="margin-left:12.2%;" type="text"><br> 
+Content: <input name="title_content" style="margin-left:12.2%;" type="text" value={3}><br> 
 <label for="search_type" style="margin-right:13.5%;">
-<input name="type_search" type="checkbox"> Search by type
+<input name="type_search" type="checkbox" {4}> Search by type
 </label>
 Type: <select name="searchtype" style="margin-left:16.8%; width:32.7%;">
-<option selected>Select Type</option>
-{1}
+<option>Select Type</option>
+{5}
 </select>
 <br> 
 <label for="abstract_con" style="margin-right:6%;">
-<input name="abs_con" type="checkbox"> Abstract contains...
+<input name="abs_con" type="checkbox" {6}> Abstract contains...
 </label>
-Content: <input name="abstract_content" style="margin-left:12%;" type="text"><br><br>
+Content: <input name="abstract_content" style="margin-left:12%;" type="text" value={7}><br><br>
 <input type="submit" value="Submit" style="margin-left:40%;"><br><br> 
 <textarea class="scrollabletextbox" id="results" style="width:100%; height:150px; resize:none;"readonly></textarea>
 </fieldset>
 </form>
-<script>document.getElementById("results").innerHTML = {2};</script>
+<script>document.getElementById("results").innerHTML = {8};</script>
 </body>
 </html>
-""".format(author,options,results_box)
-#print msg
+""".format(auth_checkbox,author,title_checkbox,title_content,type_checkbox,options,abstract_checkbox,abstract_content,results_box)
