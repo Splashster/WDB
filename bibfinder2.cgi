@@ -19,60 +19,61 @@ search_type = form_items.getvalue('searchtype')
 abstract_content = form_items.getvalue('abstract_content')
 responses = []
 publication_to_refnum = {'Journal Article':'0', 'Book':'1', 'In a conference proceedings':'3', 'In a collection (part of a book but has its own title)':'5','Tech Report':'10', 'Unpublished':'13', 'Miscellaneous':'16','In a conference proceedings':'47'}
-#auth_checkbox = "on"
-#author = "W Cui"
-#abstract_checkbox = "on"
-#abstract_content = "In this paper,"
-#type_checkbox = "on"
-#search_type = "Journal Article"
 main_list = []
-baseXMessage = ""
-existDBMessage = ""
+baseXResults = ""
+existDBResults = ""
 query_results = ""
-
+options = ""
 refnum_to_publication = {'0': 'Journal Article', '1': 'Book', '3': 'In a conference proceedings', '5': 'In a collection (part of a book but has its own title)', '10': 'Tech Report', '13': 'Unpublished', '16': 'Miscellaneous', '47': 'In a conference proceedings'}
-publication_type_list = []
-
-'''
-Get all publication types from existdb document.
-'''
-existdb_response = requests.get('http://localhost:8080/exist/rest/db/acm-turing-awards/acm-turing-awards.xml?_query=distinct-values(//XML/RECORDS/RECORD/REFERENCE_TYPE)&_howmany=1000')
 
 
 '''
-Removing exist result tags that existdb sends back in response.
+Get all publication types from existdb and baseX documents.
 '''
-existdb_pub_types = existdb_response.text.replace('<exist:value exist:type="xs:untypedAtomic">', "").replace('</exist:value>',"").split(">")
-existdb_pub_types  = existdb_pub_types[1].split("<")
-existdb_pub_types = existdb_pub_types[0].strip().replace("\n", ";").replace(" ", "").split(";")
+
+def generateTypesList():
+	global options
+	publication_type_list = []
+	
+	'''
+	Get existdb publication types
+	'''
+	existdb_response = requests.get('http://localhost:8080/exist/rest/db/acm-turing-awards/acm-turing-awards.xml?_query=distinct-values(//XML/RECORDS/RECORD/REFERENCE_TYPE)&_howmany=1000')
+	existdb_pub_types = existdb_response.text.replace('<exist:value exist:type="xs:untypedAtomic">', "").replace('</exist:value>',"").split(">")
+	existdb_pub_types  = existdb_pub_types[1].split("<")
+	existdb_pub_types = existdb_pub_types[0].strip().replace("\n", ";").replace(" ", "").split(";")
 
 
-for existdb_pub_type in existdb_pub_types:
-	publication_type_list.append(refnum_to_publication[existdb_pub_type])
+	for existdb_pub_type in existdb_pub_types:
+		publication_type_list.append(refnum_to_publication[existdb_pub_type])
+
+
+	'''
+	Get baseX publication types
+	'''
+	basex_response = requests.get('http://admin:admin@localhost:8984/rest/medsamp2012?query=distinct-values(data(//MedlineCitationSet//MedlineCitation//Article//PublicationTypeList//PublicationType))')
+
+	for basex_pub_type in basex_response.text.split("\n"):
+		publication_type_list.append(str(basex_pub_type))
+
+	publication_type_list = list(set(publication_type_list))
+
+	'''
+	Create dropdown elements for each publication types.
+	All Duplicate publication types have been removed.
+	'''
+	options = " "
+	for i in sorted(publication_type_list):
+		if i == search_type: 
+			options += """<option value="%s" selected>%s</option>\n"""%(i,i)
+		else:
+			options += """<option value="%s">%s</option>\n"""%(i,i)
 
 
 '''
-Get all publication types from basex document.
+Parses results returned from query.
+Generates a compiled list of the results.
 '''
-basex_response = requests.get('http://admin:admin@localhost:8984/rest/medsamp2012?query=distinct-values(data(//MedlineCitationSet//MedlineCitation//Article//PublicationTypeList//PublicationType))')
-
-for basex_pub_type in basex_response.text.split("\n"):
-	publication_type_list.append(str(basex_pub_type))
-
-publication_type_list = list(set(publication_type_list))
-
-'''
-Create dropdown elements for each publication types.
-All Duplicate publication types have been removed.
-'''
-options = " "
-for i in sorted(publication_type_list):
-	if i == search_type: 
-		options += """<option value="%s" selected>%s</option>\n"""%(i,i)
-	else:
-		options += """<option value="%s">%s</option>\n"""%(i,i)
-
-
 def parseResponse(response, response_type):
 	auth_list = []
 	types_list = []
@@ -88,7 +89,7 @@ def parseResponse(response, response_type):
 		tree = "<root>" + response.text + "</root>"
 		tree = etree.fromstring(tree,parser)
 		root = ET.fromstring(etree.tostring(tree))
-		global baseXMessage 
+		global baseXResults 
 		for child in root.findall("Article"):
 			try:
 				for i in child.find("PublicationTypeList"):
@@ -140,35 +141,34 @@ def parseResponse(response, response_type):
 			for parts in item:
 				if count == 0:
 					for i in parts:
-						baseXMessage += 'ReferenceType: {0}<br>'.format(i.encode('utf-8'))
+						baseXResults += 'ReferenceType: {0}<br>'.format(i.encode('utf-8'))
 					count = 1
 				elif count == 1:
 					temp = []
 					for i in parts:
 						temp.append(i.encode('utf-8'))
 					authors = ', '.join(temp)
-					baseXMessage += 'Authors: ' 
-					baseXMessage += '{0} '.format(authors)
+					baseXResults += 'Authors: ' 
+					baseXResults += '{0} '.format(authors)
 					temp = []
 					count = 2
-					baseXMessage += "<br>"
+					baseXResults += "<br>"
 				elif count == 2:
-					baseXMessage += 'Title: {0}<br>'.format(parts.encode('utf-8'))
+					baseXResults += 'Title: {0}<br>'.format(parts.encode('utf-8'))
 					count = 3
 				elif count == 3:
 					for i in parts:
-						baseXMessage += 'Abstract: {0}<br>'.format(i.encode('utf-8'))
+						baseXResults += 'Abstract: {0}<br>'.format(i.encode('utf-8'))
 					count = 0
 			if len(main_list) > 1 and item_count < len(main_list):
-				baseXMessage+='*********************************************<br>'
+				baseXResults+='*********************************************<br>'
 				item_count +=1
 		main_list = ""
-		#print baseXMessage
 	else:
 		tree = response.text
 		tree = etree.fromstring(tree,parser)
 		root = ET.fromstring(etree.tostring(tree))
-		global existDBMessage 
+		global existDBResults 
 		for child in root.findall("RECORD"):
 			try:
 				search_type = refnum_to_publication.get(child.find("REFERENCE_TYPE").text) 
@@ -184,7 +184,6 @@ def parseResponse(response, response_type):
 			
 			try:
 				title = child.find("TITLE").text
-				#print title_list
 			except:
 				title = "NONE"
 			try:
@@ -207,33 +206,30 @@ def parseResponse(response, response_type):
 			for parts in item:
 				if count == 0:
 					for i in parts:
-						existDBMessage += 'ReferenceType: {0}<br>'.format(i)
+						existDBResults += 'ReferenceType: {0}<br>'.format(i)
 					count = 1
 				elif count == 1:
 					temp = []
 					for i in parts:
 						temp.append(i.encode('utf-8'))
-					existDBMessage += 'Authors: ' 
+					existDBResults += 'Authors: ' 
 					authors = ', '.join(temp)
-					existDBMessage += '{0} '.format(authors)
+					existDBResults += '{0} '.format(authors)
 					temp = []
 					count = 2
-					existDBMessage += '<br>' 
+					existDBResults += '<br>' 
 				elif count == 2:
-					existDBMessage += 'Title: {0}<br>'.format(parts.encode('utf-8'))
+					existDBResults += 'Title: {0}<br>'.format(parts.encode('utf-8'))
 					count = 3
 				elif count == 3:
 					for i in parts:
-						existDBMessage += 'Abstract: {0}<br>'.format(i.encode('utf-8'))
+						existDBResults += 'Abstract: {0}<br>'.format(i.encode('utf-8'))
 					count = 0
 			if len(main_list) > 1 and item_count < len(main_list):
-				existDBMessage+='*********************************************<br>'
+				existDBResults+='*********************************************<br>'
 				item_count +=1
 
-		#print existDBMessage
 		main_list = ""
-	#print main_list
-	#print existDBMessage
 
 def sendQuery(query, response_type):
 	response = requests.get(query)
@@ -241,14 +237,18 @@ def sendQuery(query, response_type):
 		if response.text != "":
 			parseResponse(response, response_type)
 		else:
-			global baseXMessage 
-			baseXMessage = "NONE"
+			global baseXResults 
+			baseXResults = "NONE"
 	else:
 		if ' exist:hits="0" 'not in response.text:
 			parseResponse(response, response_type)
 		else:
-			global existDBMessage
-			existDBMessage = "NONE"
+			global existDBResults
+			existDBResults = "NONE"
+
+'''
+Gerenates baseX query based on user input
+'''
 def generateBaseXQuery():
 	
 	xpath = 'MedlineCitationSet/MedlineCitation/Article['
@@ -297,9 +297,12 @@ def generateBaseXQuery():
 		query = 'http://admin:admin@localhost:8984/rest/medsamp2012?query='+xpath+''
 		sendQuery(query, 'baseX')
 	else:
-		global baseXMessage 
-		baseXMessage = "NONE"		
+		global baseXResults 
+		baseXResults = "NONE"		
 
+'''
+Generates existdb query based on user input 
+'''
 def generateExistDBQuery():
 	
 	xpath = '//XML/RECORDS//RECORD['
@@ -331,26 +334,35 @@ def generateExistDBQuery():
 	
 	if oneChecked: 
 		xpath += "]"
-		#xpath += '/REFERENCE_TYPE|' + xpath + '/AUTHORS|' + xpath + '/TITLE|' + xpath + '/ABSTRACT'  	
 		query = 'http://admin:coursework@localhost:8080/exist/rest/db/acm-turing-awards?_query='+xpath+'&_howmany=10000'
 		sendQuery(query, 'existDB')
 	else:
-		global existDBMessage 
-		existDBMessage = "NONE"		
-	#print query
+		global existDBResults 
+		existDBResults = "NONE"		
+
+'''
+Generates combined result list from the baseX and existdb query results.
+If the baseX and existdb both returned nothing, NONE will be the only
+item in the result list.
+'''
+def generateFinalResults():
+	global query_results
+	if baseXResults != "NONE" and existDBResults != "NONE":
+		query_results = baseXResults + '*********************************************<br>' + existDBResults
+	elif baseXResults == "NONE" and existDBResults != "NONE":
+		query_results = existDBResults
+	elif baseXResults != "NONE" and existDBResults == "NONE":
+		query_results = baseXResults
+	else:
+		query_results = "NONE"
+
+	query_results = json.dumps( "Query Results: \n\n" + query_results.replace("<br>","\n"))
+
+
+generateTypesList()
 generateBaseXQuery()
 generateExistDBQuery()
-if baseXMessage != "NONE" and existDBMessage != "NONE":
-	query_results = baseXMessage + '*********************************************<br>' + existDBMessage
-elif baseXMessage == "NONE" and existDBMessage != "NONE":
-	query_results = existDBMessage
-elif baseXMessage != "NONE" and existDBMessage == "NONE":
-	query_results = baseXMessage
-else:
-	query_results = "NONE"
-
-
-results_box = json.dumps( "Query Results: \n\n" + query_results.replace("<br>","\n"))
+generateFinalResults()
 
 if json.dumps(author) == "null":
 	author = ""
@@ -383,33 +395,35 @@ else:
 print """ Cotent-type:text/html\r\n\r\n
 <html>
 <body>
+<div style="text-align:center;">
 <form action='http://localhost/~coursework/cgi-bin/bibfinder2.cgi' method='post'>
-<fieldset style="width:30%; margin-left:35%;">
-<label for="author_check" style="margin-right:10%;">
+<fieldset style="display:inline-block;text-align:left;">
+<label for="author_check" style="padding-right:18.2%;">
 <input name="auth_search" type="checkbox" {0}> Search by Author
 </label>
-Author's name: <input name="authorname"  style="margin-left:2%;" type="text" value={1}><br> 
-<label for="title_con" style="margin-right:12%;">
+Author's name: <input name="authorname" type="text" value={1}><br> 
+<label for="title_con" style="padding-right:20.5%;">
 <input name="title_con" type="checkbox" {2}> Title contains...
 </label>
-Content: <input name="title_content" style="margin-left:12.2%;" type="text" value={3}><br> 
-<label for="search_type" style="margin-right:13.5%;">
+Content: <input name="title_content" style="margin-left:9%;" type="text" value={3}><br> 
+<label for="search_type" style="padding-right:22%;">
 <input name="type_search" type="checkbox" {4}> Search by type
 </label>
-Type: <select name="searchtype" style="margin-left:16.8%; width:32.7%;">
+Type: <select name="searchtype" style="margin-left:13.3%; width:30.6%;">
 <option>Select Type</option>
 {5}
 </select>
 <br> 
-<label for="abstract_con" style="margin-right:6%;">
+<label for="abstract_con" style="padding-right:15%;">
 <input name="abs_con" type="checkbox" {6}> Abstract contains...
 </label>
-Content: <input name="abstract_content" style="margin-left:12%;" type="text" value={7}><br><br>
+Content: <input name="abstract_content" style="margin-left:8.8%;" type="text" value={7}><br><br>
 <input type="submit" value="Submit" style="margin-left:40%;"><br><br> 
 <textarea class="scrollabletextbox" id="results" style="width:100%; height:150px; resize:none;"readonly></textarea>
 </fieldset>
 </form>
+</div>
 <script>document.getElementById("results").innerHTML = {8};</script>
 </body>
 </html>
-""".format(auth_checkbox,author,title_checkbox,title_content,type_checkbox,options,abstract_checkbox,abstract_content,results_box)
+""".format(auth_checkbox,author,title_checkbox,title_content,type_checkbox,options,abstract_checkbox,abstract_content,query_results)
