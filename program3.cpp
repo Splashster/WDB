@@ -1,3 +1,7 @@
+/*
+	The purpose of this program is to simulate the Hybrid replacement scheme for caching.
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -41,6 +45,8 @@ int max_objs_replaced = 0;
 float lowest_uv = 0.0;
 float highest_uv = 0.0;
 
+
+//Gets total number of lines in the file
 int getLineCount (string filename){
 	string line;
 	string token;
@@ -59,6 +65,7 @@ int getLineCount (string filename){
 	file.close();
 }
 
+//Stores each item in the file 
 void storeRecords(string filename) {
 	string line;
 	string token;
@@ -93,6 +100,7 @@ void storeRecords(string filename) {
 	file.close();
 }
 
+//Generates the UV score for each requested item
 float generateUVScore(string server, int frequency_req, int size){
 	float score = 0.0;
 	if(server == "clark"){
@@ -103,6 +111,7 @@ float generateUVScore(string server, int frequency_req, int size){
 	return score;
 }
 
+//Adds a requested item into the cache if it is not already there
 void addItem(int i){
 	int index = 0;
 	cached_item.push_back(record[i]);
@@ -127,6 +136,15 @@ void addItem(int i){
 	index++;
 }
 
+//Replaces x item(s) in the cache depending on how much space is in the cache
+//Replace algorithm works as follows
+//First a check is done to see what the lowest UV score in the cache currently is
+//Second a check is done to see which items have that UV score
+//If only one item has that score, that item is marked to be removed from the cache
+//If multiple items have that score, the items' last date accessed are used as tiebreakers and if they are the same,
+//the last time accessed is used as a tiebreaker
+//Third the marked item is removed and a check is done to see if the new item can fit into the cache
+//If it cannot, the next lowest scored item in the cache is removed until it can fit
 void replace(int i){
 	float low_score = 0;
 	int remove_index = 0;
@@ -174,6 +192,9 @@ void replace(int i){
 	}
 }
 
+//Acquires and stores the uv score for the requested it
+//Checks to see if the requested item is in the cache
+//Increments the hit or miss variables depending on if the item is in the cache
 void cacheStoring(int i){
 	record[i].uv_score = generateUVScore(record[i].server, record[i].frequency_requested, record[i].size);
 	bool found = false;
