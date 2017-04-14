@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -23,7 +24,8 @@ struct cache {
 };
 
 Records *record;
-cache *cached_item;
+//cache *cached_item;
+vector<Records> cached_item;
 
 float epa_bw;
 float epa_cd;
@@ -33,12 +35,12 @@ float wb;
 float wf;
 int init_cache_size;
 int cache_size_left;
-int index = 0;
+//int index = 0;
 int hits = 0;
 int misses = 0;
 float hit_ratio = 0.0;
-int num_replace_called = 0;
-int num_objs_replaced = 0;
+int num_replace_alg_called = 0;
+int max_objs_replaced = 0;
 float lowest_uv = 0.0;
 float highest_uv = 0.0;
 
@@ -110,15 +112,17 @@ float generateUVScore(string server, int frequency_req, int size){
 }
 
 void addItem(int i){
-	cached_item[index].rec = record[i];
+	int index = 0;
+	cached_item.push_back(record[i]);
+	index = cached_item.size()-1;
 	cache_size_left -= record[i].size; 
 	//cout << "Size: " << record[i].size << endl;
 	//cout << "Cache left: " << cache_size_left << endl;
-	if(cached_item[index].rec.uv_score > highest_uv || highest_uv == 0.0){
-		highest_uv = cached_item[index].rec.uv_score;		
+	if(cached_item[index].uv_score > highest_uv || highest_uv == 0.0){
+		highest_uv = cached_item[index].uv_score;		
 	}
-	if(cached_item[index].rec.uv_score < lowest_uv || lowest_uv == 0.0){
-		lowest_uv = cached_item[index].rec.uv_score;		
+	if(cached_item[index].uv_score < lowest_uv || lowest_uv == 0.0){
+		lowest_uv = cached_item[index].uv_score;		
 	}
 	index++;
 }
@@ -128,42 +132,46 @@ void replace(int i){
 	int remove_index = 0;
 	string date;
 	string time;
+	int num_objs_replaced = 0;
 	
-	for(int c = 0; c < index; c++)
+	for(int c = 0; c < cached_item.size(); c++)
 	{
-		if(low_score > cached_item[c].rec.uv_score || low_score == 0)
+		if(low_score > cached_item[c].uv_score || low_score == 0)
 		{
-			low_score = cached_item[c].rec.uv_score;
-			date = cached_item[c].rec.date;
-			time = cached_item[c].rec.time;
+			low_score = cached_item[c].uv_score;
+			date = cached_item[c].date;
+			time = cached_item[c].time;
 			remove_index = c;
-		}else if(low_score == cached_item[c].rec.uv_score){
-			if(cached_item[c].rec.date < date){	
-				low_score = cached_item[c].rec.uv_score;
-				date = cached_item[c].rec.date;
-				time = cached_item[c].rec.time;
-				remove_index = c;			
-			}else if (cached_item[c].rec.time < time){
-				low_score = cached_item[c].rec.uv_score;
-				date = cached_item[c].rec.date;
-				time = cached_item[c].rec.time;
+		}else if(low_score == cached_item[c].uv_score){
+			if(cached_item[c].date < date){	
+				low_score = cached_item[c].uv_score;
+				date = cached_item[c].date;
+				time = cached_item[c].time;
+				remove_index = c;		
+			}else if (cached_item[c].time < time){
+				low_score = cached_item[c].uv_score;
+				date = cached_item[c].date;
+				time = cached_item[c].time;
 				remove_index = c;			
 			}	
 		}
 	}
-	for(int c = 0; c < index; c++)
+	for(int c = 0; c < cached_item.size(); c++)
 	{
-		if(low_score == cached_item[c].rec.uv_score)
+		if(low_score == cached_item[c].uv_score)
 		{
-			cache_size_left += cached_item[remove_index].rec.size;
-			delete[] cached_item[remove_index];
-			index--;
+			cache_size_left += cached_item[remove_index].size;
+			cached_item.erase(cached_item.begin()+remove_index);
+			//index--;
 			num_objs_replaced++;
 			if(record[i].size < cache_size_left){
 				addItem(i);
 				break;
 			}
 		}
+	}
+	if(num_objs_replaced > max_objs_replaced){
+		max_objs_replaced = num_objs_replaced;
 	}
 }
 
@@ -173,11 +181,11 @@ void cacheStoring(int i){
 	if(cache_size_left == init_cache_size){
 		addItem(i);
 	}else{
-		for(int a = 0; a < index; a++){
-			if(record[i].file_request == cached_item[a].rec.file_request){
-				cached_item[a].rec.frequency_requested++;
-				cached_item[a].rec.date = record[i].date;
-				cached_item[a].rec.time = record[i].time;
+		for(int a = 0; a < cached_item.size(); a++){
+			if(record[i].file_request == cached_item[a].file_request){
+				cached_item[a].frequency_requested++;
+				cached_item[a].date = record[i].date;
+				cached_item[a].time = record[i].time;
 				found = true;	
 				break;		
 			} 	
@@ -190,7 +198,7 @@ void cacheStoring(int i){
 				addItem(i);
 			}else{
 				replace(i);
-				num_replace_called++;			
+				num_replace_alg_called++;			
 			}
 			misses++;
 		}
@@ -213,7 +221,7 @@ int main(int argc, char *argv[]){
 	wf = stof(argv[7]);
 	init_cache_size = strtol(argv[8], NULL, 10) * 1000000;
 	cache_size_left = init_cache_size;
-	cached_item = new cache[num_lines];
+	//cached_item = new cache[num_lines];
 
 	storeRecords(filename);
 	for(int i = 0; i < num_lines; i++){
@@ -224,15 +232,17 @@ int main(int argc, char *argv[]){
 	
 	hit_ratio = ((float)hits/(float)num_lines)*100;
 	
-	cout << "cache left " << cache_size_left << endl;
+	//cout << "cache left " << cache_size_left << endl;
 	cout << "Number of cache hits: " << hits << endl;
 	cout << "Number of cache misses: " << misses << endl;
 	cout << "Cache hit ratio as a percentage: " << hit_ratio << "%" << endl;
+	cout << "Number of times the replacement algorithm was called: " << num_replace_alg_called << endl;
+	cout << "Maximum of objects replaced in a single call of the replacement algorithm: " << max_objs_replaced << endl;
 	cout << "Lowest UV for a cached object: " << lowest_uv << endl;
 	cout << "Highest UV for a cached object: " << highest_uv << endl;
-	cout << "Reqs " << cached_item[0].rec.frequency_requested << endl;
+	//cout << "Reqs " << cached_item[0].rec.frequency_requested << endl;
 
 	delete[] record;
-	delete[] cached_item;
+	//delete[] cached_item;
 	
 }
