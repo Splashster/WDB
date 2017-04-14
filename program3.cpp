@@ -4,7 +4,6 @@
 #include <sstream>
 #include <stdlib.h>
 #include <math.h>
-#include <algorithm>
 #include <vector>
 #include <iomanip>
 
@@ -244,7 +243,7 @@ int main(int argc, char *argv[]){
 	cout << "Number of cache misses: " << misses << endl;
 	cout << "Cache hit ratio as a percentage: " << hit_ratio << "%" << endl;
 	cout << "Number of times the replacement algorithm was called: " << num_replace_alg_called << endl;
-	cout << "Maximum of objects replaced in a single call of the replacement algorithm: " << max_objs_replaced << endl;
+	cout << "Maximum number of objects replaced in a single call of the replacement algorithm: " << max_objs_replaced << endl;
 	cout << "Lowest UV for a cached object: " << lowest_uv << endl;
 	cout << "Highest UV for a cached object: " << highest_uv << endl;
 	//cout << "Reqs " << cached_item[0].rec.frequency_requested << endl;
