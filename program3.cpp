@@ -6,6 +6,7 @@
 #include <math.h>
 #include <algorithm>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 
@@ -19,12 +20,7 @@ struct Records {
 	float uv_score;
 };
 
-struct cache {
-	Records rec;
-};
-
 Records *record;
-//cache *cached_item;
 vector<Records> cached_item;
 
 float epa_bw;
@@ -33,9 +29,11 @@ float clark_bw;
 float clark_cd;
 float wb;
 float wf;
+string h_s, l_s;
+int h_size,l_size;
+float h_f,h_uv,l_f,l_uv;
 int init_cache_size;
 int cache_size_left;
-//int index = 0;
 int hits = 0;
 int misses = 0;
 float hit_ratio = 0.0;
@@ -116,13 +114,21 @@ void addItem(int i){
 	cached_item.push_back(record[i]);
 	index = cached_item.size()-1;
 	cache_size_left -= record[i].size; 
-	//cout << "Size: " << record[i].size << endl;
-	//cout << "Cache left: " << cache_size_left << endl;
+	
 	if(cached_item[index].uv_score > highest_uv || highest_uv == 0.0){
-		highest_uv = cached_item[index].uv_score;		
+		highest_uv = cached_item[index].uv_score;
+		h_s = cached_item[index].server;
+		h_size = cached_item[index].size;
+		h_f = cached_item[index].frequency_requested;	
+		h_uv = cached_item[index].uv_score;
+			
 	}
 	if(cached_item[index].uv_score < lowest_uv || lowest_uv == 0.0){
-		lowest_uv = cached_item[index].uv_score;		
+		lowest_uv = cached_item[index].uv_score;
+		l_s = cached_item[index].server;
+		l_size = cached_item[index].size;
+		l_f = cached_item[index].frequency_requested;	
+		l_uv = cached_item[index].uv_score;		
 	}
 	index++;
 }
@@ -180,6 +186,7 @@ void cacheStoring(int i){
 	bool found = false;
 	if(cache_size_left == init_cache_size){
 		addItem(i);
+		misses++;
 	}else{
 		for(int a = 0; a < cached_item.size(); a++){
 			if(record[i].file_request == cached_item[a].file_request){
@@ -241,6 +248,16 @@ int main(int argc, char *argv[]){
 	cout << "Lowest UV for a cached object: " << lowest_uv << endl;
 	cout << "Highest UV for a cached object: " << highest_uv << endl;
 	//cout << "Reqs " << cached_item[0].rec.frequency_requested << endl;
+	
+	cout << "High_s: " << h_s << endl;
+	cout << "High_size: " << h_size << endl;
+	cout << "High_f: " << h_f << endl;
+	cout << "High_uv: " << h_uv << endl;
+	cout << "Low_s: " << l_s << endl;
+	cout << "Low_size: " << l_size << endl;
+	cout << "Low_f: " << l_f << endl;
+	cout << "Low_uv: " << l_uv << endl;
+
 
 	delete[] record;
 	//delete[] cached_item;
