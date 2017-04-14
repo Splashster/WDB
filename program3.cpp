@@ -91,17 +91,12 @@ void storeRecords(string filename) {
 	
 	}
 	file.close();
-//	cout << tokens[0] << " " << record[0].server << endl;
-	//cout << "Record 4 size: " << record[3].size << endl;
-	//cout << "Record 5 file requested: " << record[4].file_request << endl;
 }
 
 float generateUVScore(string server, int frequency_req, int size){
 	float score = 0.0;
 	if(server == "clark"){
-		//cout << server << " " << frequency_req << " " << size << endl;
 		score = ((clark_cd+(wb/clark_bw))*(pow(frequency_req,wf)))/size;
-		//cout << score << endl;
 	}else{
 		score = ((clark_cd+(wb/clark_bw))*pow(frequency_req,wf))/size;
 	}
@@ -167,7 +162,6 @@ void replace(int i){
 		{
 			cache_size_left += cached_item[remove_index].size;
 			cached_item.erase(cached_item.begin()+remove_index);
-			//index--;
 			num_objs_replaced++;
 			if(record[i].size < cache_size_left){
 				addItem(i);
@@ -214,7 +208,6 @@ void cacheStoring(int i){
 
 int main(int argc, char *argv[]){
 	string filename;
-	//set frequency back to 1
 	int num_lines = 0;
 	filename = argv[1];
 	num_lines = getLineCount(filename);
@@ -227,18 +220,14 @@ int main(int argc, char *argv[]){
 	wf = stof(argv[7]);
 	init_cache_size = strtol(argv[8], NULL, 10) * 1000000;
 	cache_size_left = init_cache_size;
-	//cached_item = new cache[num_lines];
 
 	storeRecords(filename);
 	for(int i = 0; i < num_lines; i++){
 		cacheStoring(i);
-		//cout << "UV Score: " << record[i].uv_score << endl;
-		
 	}
 	
 	hit_ratio = ((float)hits/(float)num_lines)*100;
-	
-	//cout << "cache left " << cache_size_left << endl;
+
 	cout << "Number of cache hits: " << hits << endl;
 	cout << "Number of cache misses: " << misses << endl;
 	cout << "Cache hit ratio as a percentage: " << hit_ratio << "%" << endl;
@@ -246,19 +235,9 @@ int main(int argc, char *argv[]){
 	cout << "Maximum number of objects replaced in a single call of the replacement algorithm: " << max_objs_replaced << endl;
 	cout << "Lowest UV for a cached object: " << lowest_uv << endl;
 	cout << "Highest UV for a cached object: " << highest_uv << endl;
-	//cout << "Reqs " << cached_item[0].rec.frequency_requested << endl;
-	
-	cout << "High_s: " << h_s << endl;
-	cout << "High_size: " << h_size << endl;
-	cout << "High_f: " << h_f << endl;
-	cout << "High_uv: " << h_uv << endl;
-	cout << "Low_s: " << l_s << endl;
-	cout << "Low_size: " << l_size << endl;
-	cout << "Low_f: " << l_f << endl;
-	cout << "Low_uv: " << l_uv << endl;
+
 
 
 	delete[] record;
-	//delete[] cached_item;
 	
 }
